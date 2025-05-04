@@ -9,7 +9,7 @@ on:
 env:
   AZURE_CONTAINER_REGISTRY: "sebastianregistry"
   CONTAINER_NAME: "product-service"     
-  RESOURCE_GROUP: "my-aks-group"
+  RESOURCE_GROUP: "my-aks-group" 
   CLUSTER_NAME: "my-aks-clusterV2"
   CHART_PATH: "API/charts/mi-app"
   CHART_OVERRIDE_PATH: "API/charts/mi-app/override.yaml"
