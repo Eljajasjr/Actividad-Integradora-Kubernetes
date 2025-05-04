@@ -11,8 +11,8 @@ env:
   CONTAINER_NAME: "product-service"     
   RESOURCE_GROUP: "my-aks-group"
   CLUSTER_NAME: "my-aks-clusterV2"
-  CHART_PATH: "mi-app"
-  CHART_OVERRIDE_PATH: "mi-app/override.yaml"
+  CHART_PATH: "./charts/mi-app"
+  CHART_OVERRIDE_PATH: "./charts/mi-app/override.yaml"
 
 jobs:
   buildImage:
@@ -111,7 +111,6 @@ jobs:
       - name: Bake deployment
         uses: azure/k8s-bake@v3
         id: bake
-        working-directory: ./charts
         with:
           renderEngine: "helm"
           helmChart: ${{ env.CHART_PATH }}
