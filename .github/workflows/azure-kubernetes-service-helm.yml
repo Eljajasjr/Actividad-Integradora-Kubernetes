@@ -104,13 +104,14 @@ jobs:
           admin: false
           use-kubelogin: true
 
-      - name: Verificar contenido del directorio
-        run: ls -R
+      # - name: Verificar contenido del directorio
+      #   run: ls -R
 
       # ——— Aquí viene el paso de bake con Helm ———
       - name: Bake deployment
         uses: azure/k8s-bake@v3
         id: bake
+        working-directory: ./charts
         with:
           renderEngine: "helm"
           helmChart: ${{ env.CHART_PATH }}
