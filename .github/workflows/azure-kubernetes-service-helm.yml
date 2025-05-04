@@ -1,5 +1,5 @@
 
-name: Build and deploy an app to AKS with Helm
+name: Build and deploy an app to AKS with Helm 
 
 on:
   push:
