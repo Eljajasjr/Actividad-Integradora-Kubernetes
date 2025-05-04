@@ -1,0 +1,8 @@
+image:
+  repository: miacr.azurecr.io/mi-app
+  tag: "1"
+replicaCount: 1
+resouces:
+  limits:
+  cpu: "250m"
+  memory: "512Mi"
