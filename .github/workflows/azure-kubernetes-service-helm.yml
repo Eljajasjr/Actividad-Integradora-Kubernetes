@@ -1,15 +1,15 @@
 
-name: Build and deploy an app to AKS with Helm 
+name: Build and deploy an app to AKS with Helm
 
 on:
   push:
-    branches: ["main"] 
+    branches: ["main"]
   workflow_dispatch:
 
 env:
   AZURE_CONTAINER_REGISTRY: "sebastianregistry"
-  CONTAINER_NAME: "product-service"      
-  RESOURCE_GROUP: "my-aks-group" 
+  CONTAINER_NAME: "product-service"     
+  RESOURCE_GROUP: "my-aks-group"
   CLUSTER_NAME: "my-aks-clusterV2"
   CHART_PATH: "API/charts/mi-app"
   CHART_OVERRIDE_PATH: "API/charts/mi-app/override.yaml"
@@ -26,12 +26,18 @@ jobs:
         uses: azure/login@v1.4.6
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Build and push image to ACR 
+      - name: Login to ACR
         run: |
-          az acr build \
-            --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} \
-            --registry ${{ env.AZURE_CONTAINER_REGISTRY }} \
-            -g ${{ env.RESOURCE_GROUP }} .
+          az acr login --name ${{ env.AZURE_CONTAINER_REGISTRY }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} .
+
+      - name: Push Docker image to ACR
+        run: |
+          docker push ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+
 
   runTests:
     runs-on: ubuntu-latest
