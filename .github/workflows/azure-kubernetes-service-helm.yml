@@ -11,8 +11,8 @@ env:
   CONTAINER_NAME: "product-service"     
   RESOURCE_GROUP: "my-aks-group"
   CLUSTER_NAME: "my-aks-clusterV2"
-  CHART_PATH: "API/charts/mi-app"
-  CHART_OVERRIDE_PATH: "API/charts/mi-app/override.yaml"
+  CHART_PATH: "mi-app"
+  CHART_OVERRIDE_PATH: "mi-app/override.yaml"
 
 jobs:
   buildImage:
