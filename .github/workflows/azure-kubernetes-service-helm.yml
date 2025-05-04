@@ -26,7 +26,7 @@ jobs:
         uses: azure/login@v1.4.6
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Build and push image to ACR
+      - name: Build and push image to ACR 
         run: |
           az acr build \
             --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }} \
