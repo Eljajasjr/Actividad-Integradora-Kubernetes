@@ -6,10 +6,14 @@ metadata:
     {{- include "mi-app.labels" . | nindent 4 }}
   annotations:
     "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": hook-succeeded
 spec:
+  restartPolicy: Never
   containers:
     - name: wget
       image: busybox
-      command: ['wget']
-      args: ['{{ include "mi-app.fullname" . }}:{{ .Values.service.port }}']
-  restartPolicy: Never
+      imagePullPolicy: IfNotPresent
+      command:
+        - wget
+      args:
+        - "{{ include "mi-app.fullname" . }}:{{ .Values.service.port }}"
