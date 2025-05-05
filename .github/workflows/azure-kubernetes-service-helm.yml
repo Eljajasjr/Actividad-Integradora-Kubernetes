@@ -5,7 +5,7 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
- 
+
 env:
   AZURE_CONTAINER_REGISTRY: "sebastianregistry"
   CONTAINER_NAME: "product-service"     
@@ -108,23 +108,34 @@ jobs:
       #   run: ls -R
 
       # ——— Aquí viene el paso de bake con Helm ———
-      - name: Bake deployment
-        uses: azure/k8s-bake@v3
-        id: bake
-        with:
-          renderEngine: "helm"
-          helmChart: ${{ env.CHART_PATH }}
-          overrideFiles: ${{ env.CHART_OVERRIDE_PATH }}
-          overrides: |
-            image.repository: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}
-            image.tag: ${{ github.sha }}
-            replicas: 2
-          helm-version: "latest"
+      # - name: Bake deployment
+      #   uses: azure/k8s-bake@v3
+      #   id: bake
+      #   with:
+      #     renderEngine: "helm"
+      #     helmChart: ${{ env.CHART_PATH }}
+      #     overrideFiles: ${{ env.CHART_OVERRIDE_PATH }}
+      #     overrides: |
+      #       image.repository: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}
+      #       image.tag: ${{ github.sha }}
+      #       replicas: 2
+      #     helm-version: "latest"
 
-      - name: Deploy application
-        uses: Azure/k8s-deploy@v4
+      # - name: Deploy application
+      #   uses: Azure/k8s-deploy@v4
+      #   with:
+      #     action: deploy
+      #     manifests: ${{ steps.bake.outputs.manifestsBundle }}
+      #     images: |
+      #       ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+      - name: Deploy with Helm  
+        uses: azure/k8s-deploy@v4
         with:
-          action: deploy
-          manifests: ${{ steps.bake.outputs.manifestsBundle }}
-          images: |
-            ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
+          chartType: helm
+          chartPath: ${{ env.CHART_PATH }}
+          releaseName: mi-app
+          namespace: default
+          overrideValues: |
+            image.repository=${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}
+            image.tag=${{ github.sha }}
+            replicas=1
