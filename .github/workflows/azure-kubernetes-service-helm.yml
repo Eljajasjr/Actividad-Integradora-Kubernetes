@@ -92,13 +92,6 @@ jobs:
         uses: azure/login@v1.4.6
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Cleanup old test-hook Pod
-        run: |
-          kubectl delete pod {{ include "mi-app.fullname" . }}-test-connection \
-            --namespace default \
-            --ignore-not-found
-
       - name: Set up kubelogin (non-interactive)
         uses: azure/use-kubelogin@v1
         with:
@@ -110,6 +103,12 @@ jobs:
           cluster-name: ${{ env.CLUSTER_NAME }}
           admin: false
           use-kubelogin: true
+
+      - name: Cleanup old test-hook Pod
+        run: |
+          kubectl delete pod {{ include "mi-app.fullname" . }}-test-connection \
+            --namespace default \
+            --ignore-not-found
 
       # - name: Verificar contenido del directorio
       #   run: ls -R
