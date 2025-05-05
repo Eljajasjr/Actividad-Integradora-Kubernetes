@@ -128,14 +128,17 @@ jobs:
       #     manifests: ${{ steps.bake.outputs.manifestsBundle }}
       #     images: |
       #       ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}:${{ github.sha }}
-      - name: Deploy with Helm  
-        uses: azure/k8s-deploy@v4
+      - name: Install Helm
+        uses: azure/setup-helm@v3
         with:
-          chartType: helm
-          chartPath: ${{ env.CHART_PATH }}
-          releaseName: mi-app
-          namespace: default
-          overrideValues: |
-            image.repository=${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }}
-            image.tag=${{ github.sha }}
-            replicas=1
+          version: v3.17.3
+
+      - name: Helm upgrade or install
+        run: |
+          helm upgrade --install mi-app ${{ env.CHART_PATH }} \
+            --namespace default \
+            --create-namespace \
+            --values ${{ env.CHART_OVERRIDE_PATH }} \
+            --set image.repository=${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.CONTAINER_NAME }} \
+            --set image.tag=${{ github.sha }} \
+            --set replicas=2
