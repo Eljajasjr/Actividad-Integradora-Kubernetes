@@ -104,12 +104,6 @@ jobs:
           admin: false
           use-kubelogin: true
 
-      - name: Cleanup old test-hook Pod
-        run: |
-          kubectl delete pod {{ include "mi-app.fullname" . }}-test-connection \
-            --namespace default \
-            --ignore-not-found
-
       # - name: Verificar contenido del directorio
       #   run: ls -R
 
