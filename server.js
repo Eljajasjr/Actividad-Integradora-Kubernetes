@@ -1,7 +1,7 @@
 // app.js
 const express = require('express');
 const app = express();
-
+ 
 // Middleware para parsear JSON
 app.use(express.json());  // :contentReference[oaicite:0]{index=0}
 
